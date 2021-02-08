@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.DATE,
             },
         },
-        { freezeTableName: true, timestamps: false }
+        { freezeTableName: true, timestamps: false, paranoid: false }
     )
     return areacomun
 }

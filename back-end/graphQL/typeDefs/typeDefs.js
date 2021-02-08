@@ -49,16 +49,20 @@ const typeDefs = gql`
             extranjeria: String!
             numero_ci: Int!
             newNombre: String!
-        ): [persona!]
+        ): persona!
 
         occupyAreaComun(
             personaID: Int!
             momento: Int!
             tipo: String!
             numero: Int!
-        ): [areacomun!]
+        ): areacomun!
 
-        deOccupyAreaComun(tipo: String!, numero: Int!): [areacomun!]
+        deOccupyAreaComun(tipo: String!, numero: Int!): areacomun!
+
+        deleteAreaComun(numero: Int!, tipo: String!): areacomun
+
+        deletePersona(extranjeria: String!, numero_ci: Int!): persona
     }
 `
 

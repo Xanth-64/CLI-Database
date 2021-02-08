@@ -4,6 +4,7 @@ const { Sequelize } = require('sequelize')
 const Op = Sequelize.Op
 const resolvers = {
     Query: {
+        //READ
         async getPersonas(root, args, { models }) {
             return await models.persona.findAll()
         },
@@ -44,6 +45,7 @@ const resolvers = {
         },
     },
     Mutation: {
+        //CREATE
         async createEdificio(root, { nombre_conjunto, numero }, { models }) {
             return await models.edificio.create({ nombre_conjunto, numero })
         },
@@ -69,33 +71,84 @@ const resolvers = {
                 numero: numero,
             })
         },
-
+        //UPDATE
         async updatePersonaName(
             root,
             { extranjeria, numero_ci, newNombre },
             { models }
         ) {
-            return await models.persona.update(
-                { nombre: newNombre },
-                {
-                    where: {
-                        extranjeria: extranjeria,
-                        numero_ci: numero_ci,
-                    },
-                }
-            )[1]
+            const currentModel = await models.persona.findOne({
+                where: {
+                    extranjeria: extranjeria,
+                    numero_ci: numero_ci,
+                },
+            })
+            if (currentModel) {
+                currentModel.nombre = newNombre
+                return await currentModel.save()
+            } else {
+                return null
+            }
         },
 
-        async occupyAreaComun(root, { personaID, momento, tipo, numero }) {
-            return await models.areacomun.update(
-                { personaID, momento },
-                {
-                    where: {
-                        tipo: tipo,
-                        numero: numero,
-                    },
+        async occupyAreaComun(
+            root,
+            { personaID, momento, tipo, numero },
+            { models }
+        ) {
+            const currentModel = await models.areacomun.findOne({
+                where: {
+                    numero: numero,
+                    tipo: tipo,
+                },
+            })
+            if (currentModel) {
+                if (!currentModel.personaID) {
+                    currentModel.personaID = personaID
+                    currentModel.momento = momento
+                    currentModel.estado = 'Ocupado'
+                    return await currentModel.save()
                 }
-            )[1]
+            } else {
+                return null
+            }
+        },
+
+        async deOccupyAreaComun(root, { tipo, numero }, { models }) {
+            const currentModel = await models.areacomun.findOne({
+                where: {
+                    numero: numero,
+                    tipo: tipo,
+                },
+            })
+            if (currentModel) {
+                currentModel.personaID = null
+                currentModel.momento = null
+                currentModel.estado = 'Disponible'
+                return currentModel.save()
+            } else {
+                return null
+            }
+        },
+
+        //DELETE
+        //TODO: Make these Paranoid-Friendly Deletes
+
+        async deleteAreaComun(root, { tipo, numero }, { models }) {
+            models.areacomun.destroy({
+                where: {
+                    numero: numero,
+                    tipo: tipo,
+                },
+            })
+        },
+        async deletePersona(root, { extranjeria, numero_ci }, { models }) {
+            models.persona.destroy({
+                where: {
+                    extranjeria: extranjeria,
+                    numero_ci: numero_ci,
+                },
+            })
         },
     },
 }

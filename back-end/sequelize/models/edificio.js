@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
                 unique: 'nombre',
             },
         },
-        { freezeTableName: true, timestamps: false }
+        { freezeTableName: true, timestamps: false, paranoid: false }
     )
     return edificio
 }

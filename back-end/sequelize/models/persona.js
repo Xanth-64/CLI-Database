@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
         },
-        { freezeTableName: true, timestamps: false }
+        { freezeTableName: true, timestamps: false, paranoid: false }
     )
     return persona
 }

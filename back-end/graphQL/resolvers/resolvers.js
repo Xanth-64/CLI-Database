@@ -132,7 +132,7 @@ const resolvers = {
         },
 
         //DELETE
-        //TODO: Make these Paranoid-Friendly Deletes
+        //TODO: Hacer los Deletes "Paranoid-Friendly"
 
         async deleteAreaComun(root, { tipo, numero }, { models }) {
             models.areacomun.destroy({

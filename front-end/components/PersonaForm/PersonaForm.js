@@ -25,7 +25,7 @@ const CREATE_PERSONA_MUTATION = gql`
         }
     }
 `
-export const PersonaForm = () => {
+function PersonaForm() {
     const [createPersona, { loading }] = useMutation(CREATE_PERSONA_MUTATION)
     const [formData, setFormData] = useState({
         nombre: '',
@@ -155,3 +155,4 @@ export const PersonaForm = () => {
         </>
     )
 }
+export default PersonaForm

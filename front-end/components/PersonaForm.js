@@ -1,13 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Card, Form, Button, FormLabel, Alert } from 'react-bootstrap'
-import { useMemo } from 'react'
-import {
-    ApolloClient,
-    HttpLink,
-    InMemoryCache,
-    useMutation,
-    gql,
-} from '@apollo/client'
+import { useMutation, gql } from '@apollo/client'
 import { concatPagination } from '@apollo/client/utilities'
 const CREATE_PERSONA_MUTATION = gql`
     mutation createPersona(
@@ -17,7 +10,13 @@ const CREATE_PERSONA_MUTATION = gql`
         $numero_ci: Int!
         $edad: Int!
     ) {
-        createPersona {
+        createPersona(
+            nombre: $nombre
+            apellido: $apellido
+            extranjeria: $extranjeria
+            numero_ci: $numero_ci
+            edad: $edad
+        ) {
             nombre
             apellido
             extranjeria
@@ -73,20 +72,21 @@ export const PersonaForm = () => {
             const formdata = {
                 nombre: name.current.value,
                 apellido: lastName.current.value,
-                edad: age.current.value,
+                edad: parseInt(age.current.value),
                 extranjeria: origin,
-                ci: ci.current.value,
+                ci: parseInt(ci.current.value),
             }
             console.log(formdata)
             await createPersona({
                 variables: {
-                    nombre: formData['nombre'],
-                    apellido: formData['apellido'],
-                    edad: formData['edad'],
-                    extranjeria: formData['extranjeria'],
-                    numero_ci: formData['ci'],
+                    nombre: formdata.nombre,
+                    apellido: formdata.apellido,
+                    edad: formdata.edad,
+                    extranjeria: formdata.extranjeria,
+                    numero_ci: formdata.ci,
                 },
             }).catch((err) => {
+                console.log('caimos aqui')
                 console.log(err)
             })
             console.log('something happened')

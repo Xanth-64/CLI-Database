@@ -9,20 +9,25 @@ import {
     gql,
 } from '@apollo/client'
 import { concatPagination } from '@apollo/client/utilities'
-const CREATE_POST_MUTATION = gql`
-        mutation createPersona ( nombre: String!
-            apellido: String!
-            extranjeria: String!
-            numero_ci: Int!
-            edad: Int!) {
-            createPersona (nombre: $nombre, apellido: $apellido, extranjeria: $extranjeria,numero_ci: $numero_ci, edad: $edad){
-                id
-                apellido
-            }
+const CREATE_PERSONA_MUTATION = gql`
+    mutation createPersona(
+        $nombre: String!
+        $apellido: String!
+        $extranjeria: String!
+        $numero_ci: Int!
+        $edad: Int!
+    ) {
+        createPersona {
+            nombre
+            apellido
+            extranjeria
+            numero_ci
+            edad
         }
-    `
+    }
+`
 export const PersonaForm = () => {
-    const [createPersona, { loading }] = useMutation(CREATE_POST_MUTATION)
+    const [createPersona, { loading }] = useMutation(CREATE_PERSONA_MUTATION)
     const [formData, setFormData] = useState({
         nombre: '',
         apellido: '',
@@ -78,7 +83,7 @@ export const PersonaForm = () => {
                     nombre: formData['nombre'],
                     apellido: formData['apellido'],
                     edad: formData['edad'],
-                    extranjeria: ormData['extranjeria'],
+                    extranjeria: formData['extranjeria'],
                     numero_ci: formData['ci'],
                 },
             }).catch((err) => {

@@ -18,9 +18,7 @@ function createApolloClient() {
         cache: new InMemoryCache({
             typePolicies: {
                 Query: {
-                    fields: {
-                        allPosts: concatPagination(),
-                    },
+                    fields: {},
                 },
             },
         }),

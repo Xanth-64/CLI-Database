@@ -14,3 +14,60 @@ a {
 * {
   box-sizing: border-box;
 }
+
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+li {
+  margin: 0px;
+  padding: 0px;
+  background-color: rgb(235, 235, 255);
+  border-color: black;
+  border: 4px;
+}
+
+.t-container {
+  width: 80%;
+  height: 720px;
+}
+
+.t-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.t-text {
+  border-style: solid;
+  border-color: black;
+  border: 4px;
+  display: flex;
+  width: 20%;
+  text-align: center;
+  padding: 2%;
+}
+
+.t-list {
+  width: 100%;
+  height: 50%;
+  overflow-y: scroll;
+}
+
+.t-btn {
+  width: 75px;
+  height: 25px;
+  display: flex;
+  justify-self: end;
+  align-items: center;
+  text-align: center;
+}
+
+.t-dark {
+  background-color: rgb(25, 25, 25);
+  color: white;
+  font-weight: bold;
+}

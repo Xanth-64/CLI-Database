@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/READ": "pages/READ.js",
-  "/CREATE": "pages/CREATE.js"
+  "/CREATE": "pages/CREATE.js",
+  "/READ": "pages/READ.js"
 }

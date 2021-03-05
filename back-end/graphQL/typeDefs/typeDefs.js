@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server-express')
 //Type Definitions
 const typeDefs = gql`
+    scalar Date
+
     type persona {
         id: Int!
         nombre: String!
@@ -16,7 +18,7 @@ const typeDefs = gql`
         tipo: String!
         numero: Int!
         personaID: Int
-        momento: Int
+        momento: Date
     }
 
     type edificio {
@@ -53,7 +55,7 @@ const typeDefs = gql`
 
         occupyAreaComun(
             personaID: Int!
-            momento: Int!
+            momento: Date!
             tipo: String!
             numero: Int!
         ): areacomun!

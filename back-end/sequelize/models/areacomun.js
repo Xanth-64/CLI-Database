@@ -16,20 +16,12 @@ module.exports = (sequelize, DataTypes) => {
             tipo: {
                 type: DataTypes.STRING(50),
                 allowNull: false,
+                unique: 'nombre',
             },
             numero: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
-            },
-            personaID: {
-                type: DataTypes.INTEGER,
-                references: {
-                    model: 'persona',
-                    key: 'id',
-                },
-            },
-            momento: {
-                type: DataTypes.DATE,
+                unique: 'nombre',
             },
         },
         { freezeTableName: true, timestamps: false, paranoid: false }

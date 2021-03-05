@@ -1,7 +1,7 @@
-//Modelo Aparcamiento
+//Modelo Gastos Extras
 module.exports = (sequelize, DataTypes) => {
-    const aparcamiento = sequelize.define(
-        'aparcamiento',
+    const gastos_extras = sequelize.define(
+        'gastos_extras',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -9,39 +9,40 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 allowNull: false,
             },
-            pisosub: {
+            monto: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
-                unique: 'codigo',
             },
-            numero: {
-                type: DataTypes.INTEGER.UNSIGNED,
+            nombre: {
+                type: DataTypes.STRING(50),
                 allowNull: false,
-                unique: 'codigo',
+                unique: 'uc_gastos',
             },
-            letra: {
-                type: DataTypes.CHAR(1),
+            año_mes: {
+                type: DataTypes.DATEONLY,
                 allowNull: false,
-                unique: 'codigo',
+                unique: 'uc_gastos',
             },
-            personaID: {
-                type: DataTypes.INTEGER,
-                references: {
-                    model: 'persona',
-                    key: 'id',
-                },
-            },
-            edificioID: {
+            apartamentoID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'edificio',
+                    model: 'apartamento',
                     key: 'id',
                 },
-                unique: 'codigo',
+                unique: 'uc_gastos',
+            },
+
+            facturaID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'factura',
+                    key: 'id',
+                },
             },
         },
         { freezeTableName: true, timestamps: false, paranoid: false }
     )
-    return aparcamiento
+    return gastos_extras
 }

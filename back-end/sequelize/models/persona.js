@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
             extranjeria: {
-                type: DataTypes.STRING(1),
+                type: DataTypes.CHAR(1),
                 allowNull: false,
                 unique: 'cedula',
             },
@@ -26,8 +26,8 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 unique: 'cedula',
             },
-            edad: {
-                type: DataTypes.INTEGER.UNSIGNED,
+            fecha_nac: {
+                type: DataTypes.DATEONLY,
                 allowNull: false,
             },
         },

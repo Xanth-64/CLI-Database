@@ -1,8 +1,8 @@
-//Modelo Telefono
+//Modelo Relación Incluyen Servicio-Factura
 
 module.exports = (sequelize, DataTypes) => {
-    const telefono = sequelize.define(
-        'telefono',
+    const incluyen = sequelize.define(
+        'incluyen',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,21 +10,24 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 allowNull: false,
             },
-            personaID: {
+            servicioID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 references: {
-                    model: 'persona',
+                    model: 'servicio',
                     key: 'id',
                 },
             },
-            telefono: {
-                type: DataTypes.INTEGER.UNSIGNED,
+            facturaID: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
-                unique: true,
+                references: {
+                    model: 'factura',
+                    key: 'id',
+                },
             },
         },
         { freezeTableName: true, timestamps: false, paranoid: false }
     )
-    return telefono
+    return incluyen
 }

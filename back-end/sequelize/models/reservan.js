@@ -1,7 +1,8 @@
-//Modelo Aparcamiento
+//Modelo Reservan
+
 module.exports = (sequelize, DataTypes) => {
-    const aparcamiento = sequelize.define(
-        'aparcamiento',
+    const reservan = sequelize.define(
+        'reservan',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -9,39 +10,34 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 allowNull: false,
             },
-            pisosub: {
-                type: DataTypes.INTEGER.UNSIGNED,
+            areaID: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
-                unique: 'codigo',
-            },
-            numero: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                allowNull: false,
-                unique: 'codigo',
-            },
-            letra: {
-                type: DataTypes.CHAR(1),
-                allowNull: false,
-                unique: 'codigo',
+                references: {
+                    model: 'areacomun',
+                    key: 'id',
+                },
+                unique: 'identificador',
             },
             personaID: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 references: {
                     model: 'persona',
                     key: 'id',
                 },
             },
-            edificioID: {
-                type: DataTypes.INTEGER,
+            momento: {
+                type: DataTypes.DATE,
                 allowNull: false,
                 references: {
-                    model: 'edificio',
+                    model: 'persona',
                     key: 'id',
                 },
-                unique: 'codigo',
+                unique: 'identificador',
             },
         },
         { freezeTableName: true, timestamps: false, paranoid: false }
     )
-    return aparcamiento
+    return reservan
 }

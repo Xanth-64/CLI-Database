@@ -1,7 +1,8 @@
-//Modelo Aparcamiento
+//Modelo Registro
+
 module.exports = (sequelize, DataTypes) => {
-    const aparcamiento = sequelize.define(
-        'aparcamiento',
+    const registro = sequelize.define(
+        'registro',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -9,27 +10,19 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
                 allowNull: false,
             },
-            pisosub: {
+            nombre_visitante: {
+                type: DataTypes.STRING(50),
+                allowNull: false,
+            },
+            fecha_hora: {
+                type: DataTypes.DATE,
+                allowNull: false,
+                unique: 'identificador',
+            },
+            ci_visitante: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
-                unique: 'codigo',
-            },
-            numero: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                allowNull: false,
-                unique: 'codigo',
-            },
-            letra: {
-                type: DataTypes.CHAR(1),
-                allowNull: false,
-                unique: 'codigo',
-            },
-            personaID: {
-                type: DataTypes.INTEGER,
-                references: {
-                    model: 'persona',
-                    key: 'id',
-                },
+                unique: 'identificador',
             },
             edificioID: {
                 type: DataTypes.INTEGER,
@@ -38,10 +31,9 @@ module.exports = (sequelize, DataTypes) => {
                     model: 'edificio',
                     key: 'id',
                 },
-                unique: 'codigo',
             },
         },
         { freezeTableName: true, timestamps: false, paranoid: false }
     )
-    return aparcamiento
+    return registro
 }

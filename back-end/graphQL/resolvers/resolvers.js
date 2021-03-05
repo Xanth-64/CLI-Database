@@ -1,8 +1,29 @@
 const { Sequelize } = require('sequelize')
 
+//Scalar types
+const { GraphQLScalarType, Kind } = require('graphql')
+//Custom Scalar Types
+const DateScalar = new GraphQLScalarType({
+    name: 'Date',
+    description: 'Definition for custom type Date',
+    serialize(value) {
+        return value.getTime()
+    },
+    parseValue(value) {
+        return new Date(value)
+    },
+    parseLiteral(value) {
+        if ((value.kind = Kind.INT)) {
+            return new Date(parseInt(value.value, 10))
+        }
+        return null
+    },
+})
+
 // Resolvers
 const Op = Sequelize.Op
 const resolvers = {
+    Date: DateScalar,
     Query: {
         //READ
         async getPersonas(root, args, { models }) {

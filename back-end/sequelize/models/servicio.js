@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 unique: 'uc_servicio',
             },
-            año_mes: {
+            anio_mes: {
                 type: DataTypes.DATEONLY,
                 allowNull: false,
                 unique: 'uc_servicio',

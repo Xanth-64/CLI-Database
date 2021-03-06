@@ -127,8 +127,7 @@ const typeDefs = gql`
         getSucesoByEdificio(edificioID:Int!):[suceso]
         getAparcamientosByEdificio(edificioID: Int!): [aparcamientos]
         getApartamentosByEdificio(edificioID: Int!): [apartamentos]
-        getMaterialsByEdificio(edificioID:Int!):[material]
-        
+        getMaterialsByEdificio(edificioID:Int!):[material]        
     }
 
     type Mutation {

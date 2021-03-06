@@ -21,13 +21,24 @@ const typeDefs = gql`
         momento: Date
     }
 
-    type aparcamiento{
+    type aparcamiento {
         id: Int!
         edificioId: Int!
         letra: String!
         numero: Int!
         personaID: Int
         pisosub: Int!
+    }
+
+    type apartamento {
+        id: Int!
+        alicuota: Int!
+        edificioID: Int!
+        letra_apt: String!
+        n_piso: Int!
+        personaID: Int!
+        registro_inmobiliario: String!
+        superficie: Int!
     }
 
     type edificio {
@@ -66,14 +77,6 @@ const typeDefs = gql`
         tipo: String!
         nombre: String!
         edificioID: Int!
-    }
-    type persona {
-        id: Int!
-        nombre: String!
-        apellido: String!
-        extranjeria: String!
-        numero_ci: Int!
-        fecha_nac: Date!
     }
     type registro {
         id: Int!
@@ -116,7 +119,7 @@ const typeDefs = gql`
         getEdificio(numero: Int!, nombre_conjunto: String!): edificio!
         getTelefonosByPersonaID(personaID: Int!): [telefono]
         getTelefonosByCedula(extranjeria: String!, numero_ci: Int!): [telefono]
-        getServiciosbyFacturaID(facturaID: int!): [servicio]
+        getServiciosbyFacturaID(facturaID: Int!): [servicio]
         getPersonasInEdificio(numero: Int!, nombre_conjunto: String!): [persona]
         getEmailsbyPersonaID(personaID: Int!): [email]
         getEmailsbyPersona(extranjeria: String!, numero_ci: Int!): [email]
@@ -125,19 +128,25 @@ const typeDefs = gql`
             extranjeria: String!
             numero_ci: Int!
         ): [areacomun]
-        getGastosExtraInFacturaID(facturaID: int!): [gastosExtras]
-        getRegistrosByCedula(extranjeria:String! numero_ci:Int1)[registro]
-        getRegistroByEdificio(edificioID:Int!):[registro]
-        getAreasbyEstado(estado:String!): [areacomun]
+        getGastosExtraInFacturaID(facturaID: Int!): [gastosExtras]
+        getRegistrosByCedula(extranjeria: String!, numero_ci: Int!): [registro]
+        getRegistroByEdificio(edificioID: Int!): [registro]
+        getAreasbyEstado(estado: String!): [areacomun]
         getAparcamientoByPersonaID(personaID: Int!): [aparcamiento]
-        getAparcamientoByCedula(extranjeria: String! numero_ci: Int!)[aparcamiento]
-        getApartamentosByPersonaID(personaID:Int!):[apartamento]
-        getApartamentosByCedula(extranjeria: String!, numero_ci:Int!): [apartamento]
-        getServiciosByEdificio(edificioID:Int!):[servicio]
-        getSucesoByEdificio(edificioID:Int!):[suceso]
+        getAparcamientoByCedula(
+            extranjeria: String!
+            numero_ci: Int!
+        ): [aparcamiento]
+        getApartamentosByPersonaID(personaID: Int!): [apartamento]
+        getApartamentosByCedula(
+            extranjeria: String!
+            numero_ci: Int!
+        ): [apartamento]
+        getServiciosByEdificio(edificioID: Int!): [servicio]
+        getSucesoByEdificio(edificioID: Int!): [suceso]
         getAparcamientoByEdificio(edificioID: Int!): [aparcamiento]
-        getApartamentosByEdificio(edificioID: Int!): [apartamentos]
-        getMaterialsByEdificio(edificioID:Int!):[material]        
+        getApartamentosByEdificio(edificioID: Int!): [apartamento]
+        getMaterialsByEdificio(edificioID: Int!): [material]
     }
 
     type Mutation {

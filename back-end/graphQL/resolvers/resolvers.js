@@ -64,6 +64,14 @@ const resolvers = {
                 },
             })
         },
+
+        async getTelefonosByPersonaID(root, { personaID }, { models }) {
+            return await models.telefono.findAll({
+                where: {
+                    personaID: personaID,
+                },
+            })
+        },
     },
     Mutation: {
         //CREATE

@@ -9,7 +9,7 @@ const typeDefs = gql`
         apellido: String!
         extranjeria: String!
         numero_ci: Int!
-        edad: Int!
+        fecha_nac: Date!
     }
 
     type areacomun {

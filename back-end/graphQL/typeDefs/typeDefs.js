@@ -11,6 +11,7 @@ const typeDefs = gql`
         numero_ci: Int!
         fecha_nac: Date!
     }
+
     type areacomun {
         id: Int!
         estado: String!
@@ -18,6 +19,15 @@ const typeDefs = gql`
         numero: Int!
         personaID: Int
         momento: Date
+    }
+
+    type aparcamiento{
+        id: Int!
+        edificioId: Int!
+        letra: String!
+        numero: Int!
+        personaID: Int
+        pisosub: Int!
     }
 
     type edificio {
@@ -34,7 +44,7 @@ const typeDefs = gql`
         id: Int!
         estado: String!
         fecha_emitida: Date!
-        total_apartamento_pagado: Int!
+        total_apartamento_pagado: Int
         apartamentoID: Int!
     }
     type gastosExtras {
@@ -119,13 +129,13 @@ const typeDefs = gql`
         getRegistrosByCedula(extranjeria:String! numero_ci:Int1)[registro]
         getRegistroByEdificio(edificioID:Int!):[registro]
         getAreasbyEstado(estado:String!): [areacomun]
-        getAparcamientosByPersonaID(personaID: Int!): [aparcamientos]
-        getAparcamientosByCedula(extranjeria: String! numero_ci: Int!)[aparcamientos]
+        getAparcamientoByPersonaID(personaID: Int!): [aparcamiento]
+        getAparcamientoByCedula(extranjeria: String! numero_ci: Int!)[aparcamiento]
         getApartamentosByPersonaID(personaID:Int!):[apartamento]
         getApartamentosByCedula(extranjeria: String!, numero_ci:Int!): [apartamento]
         getServiciosByEdificio(edificioID:Int!):[servicio]
         getSucesoByEdificio(edificioID:Int!):[suceso]
-        getAparcamientosByEdificio(edificioID: Int!): [aparcamientos]
+        getAparcamientoByEdificio(edificioID: Int!): [aparcamiento]
         getApartamentosByEdificio(edificioID: Int!): [apartamentos]
         getMaterialsByEdificio(edificioID:Int!):[material]        
     }

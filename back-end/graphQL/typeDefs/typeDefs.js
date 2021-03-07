@@ -241,8 +241,21 @@ const typeDefs = gql`
             numero_ci: Int!
         ): [apartamento]
         getServiciosByEdificio(edificioID: Int!): [servicio]
+        getServiciosByEdificioIdentifier(
+            nombre_conjunto: String!
+            numero: Int!
+        ): [servicio]
         getSucesoByEdificio(edificioID: Int!): [suceso]
+        getSucesoByEdificioIdentifier(
+            nombre_conjunto: String!
+            numero: Int!
+        ): [suceso]
+        getSucesoByDate(sucesoDate: LocalDate!): [suceso]
         getAparcamientoByEdificio(edificioID: Int!): [aparcamiento]
+        getAparcamientoByEdificioIdentifier(
+            nombre_conjunto: String!
+            numero: Int!
+        ): [aparcamiento]
         getApartamentosByEdificio(edificioID: Int!): [apartamento]
         getMaterialsByEdificio(edificioID: Int!): [material]
     }

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 unique: 'identificador',
             },
-            letraApto: {
+            letra_apt: {
                 type: DataTypes.CHAR(1),
                 allowNull: false,
                 unique: 'identificador',

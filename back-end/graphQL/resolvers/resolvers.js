@@ -72,7 +72,137 @@ const resolvers = {
                 },
             })
         },
+
+        async getApartamentosByPersonaID(root, { personaID }, { models }) {
+            return await models.apartamento.findAll({
+                where: {
+                    personaID: personaID,
+                },
+            })
+        },
+
+        async getApartamentosByCedula(
+            root,
+            { extranjeria, numero_ci },
+            { models }
+        ) {
+            models.persona.hasMany(models.apartamento)
+            models.apartamento.belongsTo(models.persona)
+            return await models.apartamento.findAll({
+                include: {
+                    model: models.persona,
+                    where: {
+                        numero_ci: numero_ci,
+                        extranjeria: extranjeria,
+                    },
+                },
+            })
+        },
+
+        async getServiciosByEdificio(root, { edificioID }, { models }) {
+            return await models.servicio.findAll({
+                where: {
+                    edificioID: edificioID,
+                },
+            })
+        },
+
+        async getServiciosByEdificioIdentifier(
+            root,
+            { nombre_conjunto, numero },
+            { models }
+        ) {
+            models.edificio.hasMany(models.servicio)
+            models.servicio.belongsTo(models.edificio)
+            return await models.servicio.findAll({
+                include: {
+                    model: models.edificio,
+                    where: {
+                        nombre_conjunto: nombre_conjunto,
+                        numero: numero,
+                    },
+                },
+            })
+        },
+
+        async getSucesoByEdificio(root, { edificioID }, { models }) {
+            return models.suceso.findAll({
+                where: {
+                    edificioID: edificioID,
+                },
+            })
+        },
+
+        async getSucesoByEdificioIdentifier(
+            root,
+            { nombre_conjunto, numero },
+            { models }
+        ) {
+            models.edificio.hasMany(models.suceso)
+            models.suceso.belongsTo(models.edificio)
+            return await models.suceso.findAll({
+                include: {
+                    model: models.edificio,
+                    where: {
+                        nombre_conjunto: nombre_conjunto,
+                        numero: numero,
+                    },
+                },
+            })
+        },
+
+        async getSucesoByDate(root, { sucesoDate }, { models }) {
+            return await models.suceso.findAll({
+                where: {
+                    fecha: sucesoDate,
+                },
+            })
+        },
+
+        async getAparcamientoByEdificio(root, { edificioID }, { models }) {
+            return await models.aparcamiento.findAll({
+                where: {
+                    edificioID: edificioID,
+                },
+            })
+        },
+
+        async getAparcamientoByEdificioIdentifier(
+            root,
+            { nombre_conjunto, numero },
+            { models }
+        ) {
+            models.edificio.hasMany(models.aparcamiento)
+            models.aparcamiento.belongsTo(models.edificio)
+
+            return await models.aparcamiento.findAll({
+                includes: {
+                    model: models.edificio,
+                    where: {
+                        nombre_conjunto: nombre_conjunto,
+                        numero: numero,
+                    },
+                },
+            })
+        },
+
+        async getApartamentosByEdificio(root, { edificioID }, { models }) {
+            return await models.apartamento.findAll({
+                where: {
+                    edificioID: edificioID,
+                },
+            })
+        },
+
+        async getMaterialsByEdificio(root, { edificioID }, { models }) {
+            return await models.material.findAll({
+                where: {
+                    edificioID: edificioID,
+                },
+            })
+        },
     },
+
     Mutation: {
         //CREATE
         async createEdificio(root, { nombre_conjunto, numero }, { models }) {

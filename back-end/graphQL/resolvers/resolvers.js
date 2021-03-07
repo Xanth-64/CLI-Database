@@ -1,29 +1,11 @@
 const { Sequelize } = require('sequelize')
-
+import { resolvers as CoolScalars } from 'graphql-scalars'
 //Scalar types
-const { GraphQLScalarType, Kind } = require('graphql')
-//Custom Scalar Types
-const DateScalar = new GraphQLScalarType({
-    name: 'Date',
-    description: 'Definition for custom type Date',
-    serialize(value) {
-        return value.getTime()
-    },
-    parseValue(value) {
-        return new Date(value)
-    },
-    parseLiteral(value) {
-        if ((value.kind = Kind.INT)) {
-            return new Date(parseInt(value.value, 10))
-        }
-        return null
-    },
-})
 
 // Resolvers
 const Op = Sequelize.Op
 const resolvers = {
-    Date: DateScalar,
+    ...CoolScalars,
     Query: {
         //READ
         async getPersonas(root, args, { models }) {
@@ -69,6 +51,24 @@ const resolvers = {
             return await models.telefono.findAll({
                 where: {
                     personaID: personaID,
+                },
+            })
+        },
+
+        async getTelefonosByCedula(
+            root,
+            { extranjeria, numero_ci },
+            { models }
+        ) {
+            models.persona.hasMany(models.telefono)
+            models.telefono.belongsTo(models.persona)
+            return await models.telefono.findAll({
+                include: {
+                    model: models.persona,
+                    where: {
+                        numero_ci: numero_ci,
+                        extranjeria: extranjeria,
+                    },
                 },
             })
         },

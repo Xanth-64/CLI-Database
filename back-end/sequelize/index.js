@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-const sequelize = new Sequelize('bdcli', 'root', 'wutberto', {
+const sequelize = new Sequelize('bdcli', 'root', 'Aansisi64', {
     host: 'localhost',
     dialect: 'mysql',
 })

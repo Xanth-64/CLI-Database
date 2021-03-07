@@ -202,6 +202,131 @@ const resolvers = {
             })
         },
     },
+    async getServiciosByFactura(root, { facturaID }, { models }) {
+        return await models.servicio.findAll({
+            where: {
+                facturaID: facturaID,
+            },
+        })
+    },
+    async getPersonasInEdificio(root, { edificioID }, { models }) {
+        models.edificio.hasMany(models.apartamento)
+        modles.apartamento.belongsTo(models.edificio)
+        models.persona.hasMany(models.apartamento)
+        models.apartamento.belongsTo(models.persona)
+        return await models.persona.findAll({
+            where: {
+                includes: {
+                    model: models.apartamento,
+                    where: {
+                        edificioID: edificioID,
+                    },
+                },
+            },
+        })
+    },
+    async getEmailsByPersonaID(root, { personaID }, { models }) {
+        models.persona.hasMany(models.emails)
+        models.email.belongsTo(models.persona)
+        return await models.email.findAll({
+            where: {
+                personaID: personaID,
+            },
+        })
+    },
+    async getEmailsByPersona(root, { extranjeria, numero_ci }, { models }) {
+        models.email.belongsTo(models.persona)
+        models.persona.hasMany(model.email)
+        return await models.email.findAll({
+            where: {
+                includes: {
+                    model: models.persona,
+                    where: {
+                        extranjeria: extranjeria,
+                        numero_ci: numero_ci,
+                    },
+                },
+            },
+        })
+    },
+    async getReservacionesByPersonaID(root, { personaID }, { models }) {
+        models.areacomun.belongsTo(models.persona)
+        models.persona.hasMany(models.areacomun)
+        return await models.findAll({
+            where: {
+                personaID: personaID,
+            },
+        })
+    },
+    async getReservacionesByPersona(
+        root,
+        { extranjeria, numero_ci },
+        { models }
+    ) {
+        models.areacomun.belongsTo(models.persona)
+        models.persona.hasMany(models.areacomun)
+        return await models.areacomun.findAll({
+            where: {
+                includes: {
+                    model: models.persona,
+                    where: {
+                        extranjeria: extranjeria,
+                        numero_ci: numero_ci,
+                    },
+                },
+            },
+        })
+    },
+    async getGastosExtrasInFacturaID(root, { facturaID }, { models }) {},
+    async getRegistrosByCedula(root, { numero_ci }, { models }) {
+        return await models.registro.findAll({
+            where: {
+                ci_visitante: numero_ci,
+            },
+        })
+    },
+    async getRegistrosByEdificio(root, { edificioID }, { models }) {
+        models.edificio.hasMany(models.registro)
+        models.registro.belongsTo(models.edificio)
+        return await models.registro.findAll({
+            where: {
+                edificioID: edificioID,
+            },
+        })
+    },
+    async getAreasByEstado(root, { estado }, { models }) {
+        return await models.areacomun.findAll({
+            estado: estado,
+        })
+    },
+    async getAparcamientosByPersonaID(root, { personaID }, { models }) {
+        models.persona.hasMany(models.aparcamiento)
+        models.aparcamiento.belongsTo(models.persona)
+        return await models.aparcamiento.findAll({
+            where: {
+                personaID: personaID,
+            },
+        })
+    },
+    async getAparcamientosByCedula(
+        root,
+        { extranjeria, numero_ci },
+        { models }
+    ) {
+        models.persona.hasMany(models.aparcamiento)
+        models.aparcamiento.belongsTo(models.persona)
+        return await models.aparcamiento.findAll({
+            where: {
+                includes: {
+                    model: models.persona,
+                    where: {
+                        extranjeria: extranjeria,
+                        numero_ci: numero_ci,
+                    },
+                },
+            },
+        })
+    },
 
     Mutation: {
         //CREATE

@@ -228,7 +228,7 @@ const typeDefs = gql`
         getEdificio(numero: Int!, nombre_conjunto: String!): edificio!
         getTelefonosByPersonaID(personaID: Int!): [telefono]
         getTelefonosByCedula(extranjeria: String!, numero_ci: Int!): [telefono]
-        getServiciosbyFacturaID(facturaID: Int!): [servicio]
+        getServiciosByFacturaID(facturaID: Int!): [servicio]
         getPersonasInEdificio(numero: Int!, nombre_conjunto: String!): [persona]
         getEmailsbyPersonaID(personaID: Int!): [email]
         getEmailsbyPersona(extranjeria: String!, numero_ci: Int!): [email]

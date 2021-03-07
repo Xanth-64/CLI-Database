@@ -312,7 +312,7 @@ const resolvers = {
             )
         },
     },
-    async getServiciosByFactura(root, { facturaID }, { models }) {
+    async getServiciosByFacturaID(root, { facturaID }, { models }) {
         return await models.servicio.findAll({
             where: {
                 facturaID: facturaID,

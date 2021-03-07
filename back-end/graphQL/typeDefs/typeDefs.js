@@ -155,6 +155,9 @@ const typeDefs = gql`
         fecha_emitida: Date!
         total_apartamento_pagado: Int
         apartamentoID: Int!
+        total_apartamento: Float
+        total_edificio: Float
+        total_faltante: Float
     }
     type gastosExtras {
         id: Int!
@@ -195,6 +198,14 @@ const typeDefs = gql`
         nombre: String!
         anio_mes: Date!
         costo: Int!
+    }
+    type servicioDetail {
+        id: Int!
+        edificioID: Int!
+        nombre: String!
+        anio_mes: Date!
+        costo: Int!
+        Monto_A_Pagar: Float!
     }
     type suceso {
         id: Int!
@@ -251,13 +262,46 @@ const typeDefs = gql`
             numero: Int!
         ): [suceso]
         getSucesoByDate(sucesoDate: LocalDate!): [suceso]
+        getSucesoByDateRange(
+            LowerBound: LocalDate!
+            UpperBound: LocalDate!
+        ): [suceso]
+        getSucesoByDateRangeAndEdificioIdentifier(
+            LowerBound: LocalDate!
+            UpperBound: LocalDate!
+            nombre_conjunto: String!
+            numero: Int!
+        ): [suceso]
+
         getAparcamientoByEdificio(edificioID: Int!): [aparcamiento]
         getAparcamientoByEdificioIdentifier(
             nombre_conjunto: String!
             numero: Int!
         ): [aparcamiento]
         getApartamentosByEdificio(edificioID: Int!): [apartamento]
+        getApartamentosByEdificioIdentifier(
+            nombre_conjunto: String!
+            numero: Int!
+        ): [apartamento]
         getMaterialsByEdificio(edificioID: Int!): [material]
+        getMaterialsByEdificioIdentifier(
+            nombre_conjunto: String!
+            numero: Int!
+        ): [material]
+        getFacturaDetail(
+            nombre_conjunto: String!
+            numero: Int!
+            n_piso: Int!
+            letra_apt: String!
+            fecha: LocalDate!
+        ): [servicioDetail]
+        getFacturaResults(
+            nombre_conjunto: String!
+            numero: Int!
+            n_piso: Int!
+            letra_apt: String!
+            fecha: LocalDate!
+        ): [factura]
     }
 
     type Mutation {

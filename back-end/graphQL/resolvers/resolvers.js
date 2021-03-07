@@ -1,4 +1,5 @@
-const { Sequelize } = require('sequelize')
+const { Sequelize, QueryTypes } = require('sequelize')
+
 import { resolvers as CoolScalars } from 'graphql-scalars'
 //Scalar types
 
@@ -159,6 +160,45 @@ const resolvers = {
             })
         },
 
+        async getSucesoByDateRange(
+            root,
+            { LowerBound, UpperBound },
+            { models }
+        ) {
+            return await models.suceso.findAll({
+                where: {
+                    fecha: {
+                        [Op.gte]: LowerBound,
+                        [Op.lte]: UpperBound,
+                    },
+                },
+            })
+        },
+
+        async getSucesoByDateRangeAndEdificioIdentifier(
+            root,
+            { LowerBound, UpperBound, nombre_conjunto, numero },
+            { models }
+        ) {
+            models.edificio.hasMany(models.suceso)
+            models.suceso.belongsTo(models.edificio)
+            return await models.suceso.findAll({
+                where: {
+                    fecha: {
+                        [Op.gte]: LowerBound,
+                        [Op.lte]: UpperBound,
+                    },
+                },
+                include: {
+                    model: models.edificio,
+                    where: {
+                        nombre_conjunto: nombre_conjunto,
+                        numero: numero,
+                    },
+                },
+            })
+        },
+
         async getAparcamientoByEdificio(root, { edificioID }, { models }) {
             return await models.aparcamiento.findAll({
                 where: {
@@ -194,12 +234,82 @@ const resolvers = {
             })
         },
 
+        async getApartamentosByEdificioIdentifier(
+            root,
+            { nombre_conjunto, numero },
+            models
+        ) {
+            models.edificio.hasMany(models.apartamento)
+            models.apartamento.belongsTo(models.edificio)
+            return await models.apartamento.findAll({
+                include: {
+                    model: models.edificio,
+                    where: {
+                        nombre_conjunto: nombre_conjunto,
+                        numero: numero,
+                    },
+                },
+            })
+        },
+
         async getMaterialsByEdificio(root, { edificioID }, { models }) {
             return await models.material.findAll({
                 where: {
                     edificioID: edificioID,
                 },
             })
+        },
+
+        async getMaterialsByEdificioIdentifier(
+            root,
+            { nombre_conjunto, numero },
+            { models }
+        ) {
+            models.edificio.hasMany(models.material)
+            models.material.belongsTo(models.edificio)
+
+            return await models.material.findAll({
+                include: {
+                    model: models.edificio,
+                    where: {
+                        nombre_conjunto: nombre_conjunto,
+                        numero: numero,
+                    },
+                },
+            })
+        },
+
+        async getFacturaDetail(
+            root,
+            { nombre_conjunto, numero, n_piso, letra_apt, fecha },
+            { models }
+        ) {
+            return await models.sequelize.query(
+                'SELECT servicio.nombre, servicio.anio_mes, servicio.costo, servicio.costo * apartamento.alicuota/100 as "Monto_A_Pagar" FROM edificio INNER JOIN apartamento ON apartamento.edificioID = edificio.id INNER JOIN factura ON factura.apartamentoID = apartamento.id INNER JOIN incluyen ON factura.id = incluyen.facturaID INNER JOIN servicio ON incluyen.servicioID = servicio.id WHERE edificio.nombre_conjunto = ? AND edificio.numero = ? AND apartamento.n_piso = ? AND apartamento.letra_apt = ? AND  factura.fecha_emitida = ?',
+                {
+                    replacements: [
+                        nombre_conjunto,
+                        numero,
+                        n_piso,
+                        letra_apt,
+                        fecha,
+                    ],
+                    type: QueryTypes.SELECT,
+                }
+            )
+        },
+
+        async getFacturaResults(
+            root,
+            { nombre_conjunto, numero, n_piso, letra_apt, fecha },
+            { models }
+        ) {
+            return await models.sequelize.query(
+                'SELECT SUM(servicio.costo) As "total_edificio", SUM(servicio.costo * apartamento.alicuota/100) as "total_apartamento",SUM(servicio.costo * apartamento.alicuota/100) - total_apartamento_pagado AS "total_faltante", total_apartamento_pagado FROM apartamento INNER JOIN factura ON factura.apartamentoID = apartamento.id INNER JOIN incluyen ON factura.id = incluyen.facturaID INNER JOIN servicio ON incluyen.servicioID = servicio.id GROUP BY total_apartamento_pagado',
+                {
+                    type: QueryTypes.SELECT,
+                }
+            )
         },
     },
 

@@ -279,6 +279,69 @@ const resolvers = {
             })
         },
 
+        async getGastosExtrasDetail(
+            root,
+            { nombre_conjunto, numero, n_piso, letra_apt, fecha },
+            { models }
+        ) {
+            models.apartamento.hasMany(models.gastos_extras)
+            models.gastos_extras.belongsTo(models.apartamento)
+            models.edificio.hasMany(models.apartamento)
+            models.apartamento.belongsTo(models.edificio)
+
+            return await models.gastos_extras.findAll({
+                where: {
+                    anio_mes: fecha,
+                },
+                include: {
+                    model: models.apartamento,
+                    where: {
+                        n_piso: n_piso,
+                        letra_apt: letra_apt,
+                    },
+                    include: {
+                        model: models.edificio,
+                        where: {
+                            nombre_conjunto: nombre_conjunto,
+                            numero: numero,
+                        },
+                    },
+                },
+            })
+        },
+        async getGastosExtrasResult(
+            root,
+            { nombre_conjunto, numero, n_piso, letra_apt, fecha },
+            { models }
+        ) {
+            models.apartamento.hasMany(models.gastos_extras)
+            models.gastos_extras.belongsTo(models.apartamento)
+            models.edificio.hasMany(models.apartamento)
+            models.apartamento.belongsTo(models.edificio)
+            return await models.gastos_extras
+                .aggregate('monto', 'sum', {
+                    where: {
+                        anio_mes: fecha,
+                    },
+                    include: {
+                        model: models.apartamento,
+                        where: {
+                            n_piso: n_piso,
+                            letra_apt: letra_apt,
+                        },
+                        include: {
+                            model: models.edificio,
+                            where: {
+                                nombre_conjunto: nombre_conjunto,
+                                numero: numero,
+                            },
+                        },
+                    },
+                })
+                .then((res) => {
+                    return { sum: res }
+                })
+        },
         async getFacturaDetail(
             root,
             { nombre_conjunto, numero, n_piso, letra_apt, fecha },
@@ -305,137 +368,146 @@ const resolvers = {
             { models }
         ) {
             return await models.sequelize.query(
-                'SELECT SUM(servicio.costo) As "total_edificio", SUM(servicio.costo * apartamento.alicuota/100) as "total_apartamento",SUM(servicio.costo * apartamento.alicuota/100) - total_apartamento_pagado AS "total_faltante", total_apartamento_pagado FROM apartamento INNER JOIN factura ON factura.apartamentoID = apartamento.id INNER JOIN incluyen ON factura.id = incluyen.facturaID INNER JOIN servicio ON incluyen.servicioID = servicio.id GROUP BY total_apartamento_pagado',
+                'SELECT SUM(servicio.costo) As "total_edificio", SUM(servicio.costo * apartamento.alicuota/100) as "total_apartamento",SUM(servicio.costo * apartamento.alicuota/100) - total_apartamento_pagado AS "total_faltante", total_apartamento_pagado FROM edificio INNER JOIN apartamento ON apartamento.edificioID = edificio.id INNER JOIN factura ON factura.apartamentoID = apartamento.id INNER JOIN incluyen ON factura.id = incluyen.facturaID INNER JOIN servicio ON incluyen.servicioID = servicio.id WHERE edificio.nombre_conjunto = ? AND edificio.numero = ? AND apartamento.n_piso = ? AND apartamento.letra_apt = ? AND  factura.fecha_emitida = ? GROUP BY total_apartamento_pagado ',
                 {
+                    replacements: [
+                        nombre_conjunto,
+                        numero,
+                        n_piso,
+                        letra_apt,
+                        fecha,
+                    ],
                     type: QueryTypes.SELECT,
                 }
             )
         },
-    },
-    async getServiciosByFacturaID(root, { facturaID }, { models }) {
-        return await models.servicio.findAll({
-            where: {
-                facturaID: facturaID,
-            },
-        })
-    },
-    async getPersonasInEdificio(root, { edificioID }, { models }) {
-        models.edificio.hasMany(models.apartamento)
-        modles.apartamento.belongsTo(models.edificio)
-        models.persona.hasMany(models.apartamento)
-        models.apartamento.belongsTo(models.persona)
-        return await models.persona.findAll({
-            where: {
-                includes: {
-                    model: models.apartamento,
-                    where: {
-                        edificioID: edificioID,
+
+        async getServiciosByFacturaID(root, { facturaID }, { models }) {
+            return await models.servicio.findAll({
+                where: {
+                    facturaID: facturaID,
+                },
+            })
+        },
+        async getPersonasInEdificio(root, { edificioID }, { models }) {
+            models.edificio.hasMany(models.apartamento)
+            modles.apartamento.belongsTo(models.edificio)
+            models.persona.hasMany(models.apartamento)
+            models.apartamento.belongsTo(models.persona)
+            return await models.persona.findAll({
+                where: {
+                    includes: {
+                        model: models.apartamento,
+                        where: {
+                            edificioID: edificioID,
+                        },
                     },
                 },
-            },
-        })
-    },
-    async getEmailsByPersonaID(root, { personaID }, { models }) {
-        models.persona.hasMany(models.emails)
-        models.email.belongsTo(models.persona)
-        return await models.email.findAll({
-            where: {
-                personaID: personaID,
-            },
-        })
-    },
-    async getEmailsByPersona(root, { extranjeria, numero_ci }, { models }) {
-        models.email.belongsTo(models.persona)
-        models.persona.hasMany(model.email)
-        return await models.email.findAll({
-            where: {
-                includes: {
-                    model: models.persona,
-                    where: {
-                        extranjeria: extranjeria,
-                        numero_ci: numero_ci,
+            })
+        },
+
+        async getEmailsbyPersonaID(root, { personaID }, { models }) {
+            models.persona.hasMany(models.emails)
+            models.email.belongsTo(models.persona)
+            return await models.email.findAll({
+                where: {
+                    personaID: personaID,
+                },
+            })
+        },
+        async getEmailsbyPersona(root, { extranjeria, numero_ci }, { models }) {
+            models.email.belongsTo(models.persona)
+            models.persona.hasMany(model.email)
+            return await models.email.findAll({
+                where: {
+                    includes: {
+                        model: models.persona,
+                        where: {
+                            extranjeria: extranjeria,
+                            numero_ci: numero_ci,
+                        },
                     },
                 },
-            },
-        })
-    },
-    async getReservacionesByPersonaID(root, { personaID }, { models }) {
-        models.areacomun.belongsTo(models.persona)
-        models.persona.hasMany(models.areacomun)
-        return await models.findAll({
-            where: {
-                personaID: personaID,
-            },
-        })
-    },
-    async getReservacionesByPersona(
-        root,
-        { extranjeria, numero_ci },
-        { models }
-    ) {
-        models.areacomun.belongsTo(models.persona)
-        models.persona.hasMany(models.areacomun)
-        return await models.areacomun.findAll({
-            where: {
-                includes: {
-                    model: models.persona,
-                    where: {
-                        extranjeria: extranjeria,
-                        numero_ci: numero_ci,
+            })
+        },
+        async getReservacionesByPersonaID(root, { personaID }, { models }) {
+            models.areacomun.belongsTo(models.persona)
+            models.persona.hasMany(models.areacomun)
+            return await models.findAll({
+                where: {
+                    personaID: personaID,
+                },
+            })
+        },
+        async getReservacionesByPersona(
+            root,
+            { extranjeria, numero_ci },
+            { models }
+        ) {
+            models.areacomun.belongsTo(models.persona)
+            models.persona.hasMany(models.areacomun)
+            return await models.areacomun.findAll({
+                where: {
+                    includes: {
+                        model: models.persona,
+                        where: {
+                            extranjeria: extranjeria,
+                            numero_ci: numero_ci,
+                        },
                     },
                 },
-            },
-        })
-    },
-    async getGastosExtrasInFacturaID(root, { facturaID }, { models }) {},
-    async getRegistrosByCedula(root, { numero_ci }, { models }) {
-        return await models.registro.findAll({
-            where: {
-                ci_visitante: numero_ci,
-            },
-        })
-    },
-    async getRegistrosByEdificio(root, { edificioID }, { models }) {
-        models.edificio.hasMany(models.registro)
-        models.registro.belongsTo(models.edificio)
-        return await models.registro.findAll({
-            where: {
-                edificioID: edificioID,
-            },
-        })
-    },
-    async getAreasByEstado(root, { estado }, { models }) {
-        return await models.areacomun.findAll({
-            estado: estado,
-        })
-    },
-    async getAparcamientosByPersonaID(root, { personaID }, { models }) {
-        models.persona.hasMany(models.aparcamiento)
-        models.aparcamiento.belongsTo(models.persona)
-        return await models.aparcamiento.findAll({
-            where: {
-                personaID: personaID,
-            },
-        })
-    },
-    async getAparcamientosByCedula(
-        root,
-        { extranjeria, numero_ci },
-        { models }
-    ) {
-        models.persona.hasMany(models.aparcamiento)
-        models.aparcamiento.belongsTo(models.persona)
-        return await models.aparcamiento.findAll({
-            where: {
-                includes: {
-                    model: models.persona,
-                    where: {
-                        extranjeria: extranjeria,
-                        numero_ci: numero_ci,
+            })
+        },
+        async getGastosExtraInFacturaID(root, { facturaID }, { models }) {},
+        async getRegistrosByCedula(root, { numero_ci }, { models }) {
+            return await models.registro.findAll({
+                where: {
+                    ci_visitante: numero_ci,
+                },
+            })
+        },
+        async getRegistroByEdificio(root, { edificioID }, { models }) {
+            models.edificio.hasMany(models.registro)
+            models.registro.belongsTo(models.edificio)
+            return await models.registro.findAll({
+                where: {
+                    edificioID: edificioID,
+                },
+            })
+        },
+        async getAreasbyEstado(root, { estado }, { models }) {
+            return await models.areacomun.findAll({
+                estado: estado,
+            })
+        },
+        async getAparcamientoByPersonaID(root, { personaID }, { models }) {
+            models.persona.hasMany(models.aparcamiento)
+            models.aparcamiento.belongsTo(models.persona)
+            return await models.aparcamiento.findAll({
+                where: {
+                    personaID: personaID,
+                },
+            })
+        },
+        async getAparcamientoByCedula(
+            root,
+            { extranjeria, numero_ci },
+            { models }
+        ) {
+            models.persona.hasMany(models.aparcamiento)
+            models.aparcamiento.belongsTo(models.persona)
+            return await models.aparcamiento.findAll({
+                where: {
+                    includes: {
+                        model: models.persona,
+                        where: {
+                            extranjeria: extranjeria,
+                            numero_ci: numero_ci,
+                        },
                     },
                 },
-            },
-        })
+            })
+        },
     },
 
     Mutation: {

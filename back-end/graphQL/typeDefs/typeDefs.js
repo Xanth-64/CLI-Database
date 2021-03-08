@@ -166,6 +166,7 @@ const typeDefs = gql`
         anio_mes: Date!
         apartamentoID: Int!
         facturaID: Int!
+        sum: Int
     }
     type incluyen {
         id: Int!
@@ -272,7 +273,6 @@ const typeDefs = gql`
             nombre_conjunto: String!
             numero: Int!
         ): [suceso]
-
         getAparcamientoByEdificio(edificioID: Int!): [aparcamiento]
         getAparcamientoByEdificioIdentifier(
             nombre_conjunto: String!
@@ -288,6 +288,21 @@ const typeDefs = gql`
             nombre_conjunto: String!
             numero: Int!
         ): [material]
+
+        getGastosExtrasResult(
+            nombre_conjunto: String!
+            numero: Int!
+            n_piso: Int!
+            letra_apt: String!
+            fecha: LocalDate!
+        ): gastosExtras
+        getGastosExtrasDetail(
+            nombre_conjunto: String!
+            numero: Int!
+            n_piso: Int!
+            letra_apt: String!
+            fecha: LocalDate!
+        ): [gastosExtras]
         getFacturaDetail(
             nombre_conjunto: String!
             numero: Int!
@@ -314,6 +329,7 @@ const typeDefs = gql`
             edad: Int!
         ): persona!
         createAreaComun(tipo: String!, numero: Int!): areacomun!
+
         createFactura(
             estado: String!
             fecha_emitida: Date!

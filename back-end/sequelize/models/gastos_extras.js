@@ -32,15 +32,6 @@ module.exports = (sequelize, DataTypes) => {
                 },
                 unique: 'uc_gastos',
             },
-
-            facturaID: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'factura',
-                    key: 'id',
-                },
-            },
         },
         { freezeTableName: true, timestamps: false, paranoid: false }
     )

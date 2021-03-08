@@ -180,10 +180,15 @@ const typeDefs = gql`
         nombre: String!
         edificioID: Int!
     }
+
+    type mensaje {
+        payload: String!
+    }
+
     type registro {
         id: Int!
         nombre_visitante: Int!
-        fecha_hora: Date!
+        fecha_hora: String!
         ci_visitante: Int!
         edificioID: Int!
     }
@@ -326,8 +331,50 @@ const typeDefs = gql`
             apellido: String!
             extranjeria: String!
             numero_ci: Int!
-            edad: Int!
+            fecha_nac: LocalDate!
         ): persona!
+
+        createApartamento(
+            nombre_conjunto: String!
+            numero: Int!
+            extranjeria: String!
+            numero_ci: Int!
+            alicuota: Int!
+            letra_apt: String!
+            n_piso: Int!
+            registro_inmobiliario: String!
+            superficie: Int!
+        ): mensaje
+
+        createServicio(
+            nombre_conjunto: String!
+            numero: Int!
+            nombre: String!
+            anio_mes: LocalDate!
+            costo: Int!
+        ): mensaje
+
+        facturacionMasiva(
+            anio_mes: LocalDate!
+            nombre_conjunto: String!
+            numero: Int!
+        ): mensaje
+
+        createSuceso(
+            descripcion: String!
+            titulo: String!
+            fecha: LocalDate!
+            nombre_conjunto: String!
+            numero: Int!
+        ): mensaje
+
+        createRegistro(
+            nombre_conjunto: String!
+            numero: Int!
+            nombre_visitante: String!
+            fecha_hora: String!
+            numero_ci: Int!
+        ): mensaje
         createAreaComun(tipo: String!, numero: Int!): areacomun!
 
         createFactura(
@@ -336,6 +383,7 @@ const typeDefs = gql`
             total_apartamento_pagado: Int!
             apartamentoID: Int!
         ): factura!
+
         addTelefono(personaID: Int!, telefono: Int!): [telefono]!
         addTelefonoWithCedula(
             extranjeria: String!
@@ -343,24 +391,7 @@ const typeDefs = gql`
             telefono: Int!
         ): [telefono]!
         addEmailwithPersonaID(personaID: Int!, email: String!): [email]!
-        createRegistro(
-            edificioID: Int!
-            nombre_visitante: String!
-            fecha_hora: Date!
-            numero_ci: Int!
-        ): [registro]!
-        createSuceso(
-            edificioID: Int!
-            titulo: String!
-            descripcion: String!
-            fecha: Date!
-        ): suceso!
-        createServicio(
-            edificioID: Int!
-            nombre: String!
-            anio_mes: Date!
-            costo: Int!
-        ): servicio!
+
         createMaterial(
             edificioID: Int!
             nombre: String!

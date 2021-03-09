@@ -1,4 +1,3 @@
-import React from 'react';
 import PersonRow from './PersonRow';
 
 const PersonTable = ({persons}) => {
@@ -6,7 +5,6 @@ const PersonTable = ({persons}) => {
         return (
             <li key={item.id}>
                 <PersonRow
-                    id={item.id}
                     firstName={item.nombre}
                     lastName={item.apellido}
                     foreigner={item.extranjeria}
@@ -22,7 +20,6 @@ const PersonTable = ({persons}) => {
             <h1>Persona</h1>
             <div className='t-dark'>
                 <PersonRow
-                    id='ID'
                     firstName='Nombre'
                     lastName='Apellido'
                     foreigner='Extranjería'

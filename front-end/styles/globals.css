@@ -1,73 +1,92 @@
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 ul {
-  list-style: none;
-  margin: 0px;
-  padding: 0px;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
 }
 
 li {
-  margin: 0px;
-  padding: 0px;
-  background-color: rgb(235, 235, 255);
-  border-color: black;
-  border: 4px;
+    margin: 0px;
+    padding: 0px;
+    background-color: rgb(235, 235, 255);
+    border-color: black;
+    border: 4px;
 }
 
 .t-container {
-  width: 80%;
-  height: 720px;
+    width: 80%;
+    height: 720px;
 }
 
 .t-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
 }
 
 .t-text {
-  border-style: solid;
-  border-color: black;
-  border: 4px;
-  display: flex;
-  width: 20%;
-  text-align: center;
-  padding: 2%;
+    border-style: solid;
+    border-color: black;
+    border: 4px;
+    display: flex;
+    width: 20%;
+    text-align: center;
+    padding: 2%;
 }
 
 .t-list {
-  width: 100%;
-  height: 50%;
-  overflow-y: scroll;
+    width: 100%;
+    height: 50%;
+    overflow-y: scroll;
 }
 
 .t-btn {
-  width: 75px;
-  height: 25px;
-  display: flex;
-  justify-self: end;
-  align-items: center;
-  text-align: center;
+    width: 75px;
+    height: 25px;
+    display: flex;
+    justify-self: end;
+    align-items: center;
+    text-align: center;
 }
 
 .t-dark {
-  background-color: rgb(25, 25, 25);
-  color: white;
-  font-weight: bold;
+    background-color: rgb(25, 25, 25);
+    color: white;
+    font-weight: bold;
+}
+
+.SucesoList {
+    display: block;
+    align-items: center;
+    width: 100vw;
+    justify-content: center;
+    padding: 10px;
+    text-align: center;
+}
+.SucesoTitulo {
+    text-align: center;
+    font-size: 25px;
+    width: 100vw;
+}
+.SucesoDescripcion {
+    text-align: center;
+    font-size: 14px;
+    width: 100vw;
 }

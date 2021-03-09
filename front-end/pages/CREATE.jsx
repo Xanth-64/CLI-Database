@@ -3,7 +3,7 @@ import FacturaForm from '../components/FacturaForm'
 function createCRUD() {
     return (
         <div>
-            <Button>Hello</Button>
+            <button>Hello</button>
             <article>
                 <PersonaForm></PersonaForm>
             </article>

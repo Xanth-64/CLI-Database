@@ -11,7 +11,7 @@ const FacturaForm = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <h3>Información del edificio</h3>
 
-            <label for="nombre_edificio">Nombre del edificio:</label>
+            <label htmlFor="nombre_edificio">Nombre del edificio:</label>
             <input
                 ref={register}
                 name="nombre_edificio"
@@ -19,7 +19,7 @@ const FacturaForm = () => {
                 id="nombre_edificio"
             />
 
-            <label for="numero_edificio">Número del edificio:</label>
+            <label htmlFor="numero_edificio">Número del edificio:</label>
             <input
                 ref={register}
                 name="numero_edificio"
@@ -29,7 +29,7 @@ const FacturaForm = () => {
 
             <h3>Información del apartamento</h3>
 
-            <label for="nombre_apto">Nombre del apartamento:</label>
+            <label htmlFor="nombre_apto">Nombre del apartamento:</label>
             <input
                 ref={register}
                 name="nombre_apto"
@@ -37,7 +37,7 @@ const FacturaForm = () => {
                 id="nombre_apto"
             />
 
-            <label for="numero_apto">Número del apartamento:</label>
+            <label htmlFor="numero_apto">Número del apartamento:</label>
             <input
                 ref={register}
                 name="numero_apto"

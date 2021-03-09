@@ -1,32 +1,32 @@
 import React, { useState, useRef } from 'react'
 import { Card, Form, Button, FormLabel, Alert } from 'react-bootstrap'
-import { useMutation, gql } from '@apollo/client'
-import { concatPagination } from '@apollo/client/utilities'
-const CREATE_PERSONA_MUTATION = gql`
-    mutation createPersona(
-        $nombre: String!
-        $apellido: String!
-        $extranjeria: String!
-        $numero_ci: Int!
-        $edad: Int!
-    ) {
-        createPersona(
-            nombre: $nombre
-            apellido: $apellido
-            extranjeria: $extranjeria
-            numero_ci: $numero_ci
-            edad: $edad
-        ) {
-            nombre
-            apellido
-            extranjeria
-            numero_ci
-            edad
-        }
-    }
-`
+// import { useMutation, gql } from '@apollo/client'
+// import { concatPagination } from '@apollo/client/utilities'
+// const CREATE_PERSONA_MUTATION = gql`
+//     mutation createPersona(
+//         $nombre: String!
+//         $apellido: String!
+//         $extranjeria: String!
+//         $numero_ci: Int!
+//         $edad: Int!
+//     ) {
+//         createPersona(
+//             nombre: $nombre
+//             apellido: $apellido
+//             extranjeria: $extranjeria
+//             numero_ci: $numero_ci
+//             edad: $edad
+//         ) {
+//             nombre
+//             apellido
+//             extranjeria
+//             numero_ci
+//             edad
+//         }
+//     }
+//`
 function PersonaForm() {
-    const [createPersona, { loading }] = useMutation(CREATE_PERSONA_MUTATION)
+    //const [createPersona, { loading }] = useMutation(CREATE_PERSONA_MUTATION)
     const [formData, setFormData] = useState({
         nombre: '',
         apellido: '',
@@ -77,18 +77,18 @@ function PersonaForm() {
                 ci: parseInt(ci.current.value),
             }
             console.log(formdata)
-            await createPersona({
-                variables: {
-                    nombre: formdata.nombre,
-                    apellido: formdata.apellido,
-                    edad: formdata.edad,
-                    extranjeria: formdata.extranjeria,
-                    numero_ci: formdata.ci,
-                },
-            }).catch((err) => {
-                console.log('caimos aqui')
-                console.log(err)
-            })
+            // await createPersona({
+            //     variables: {
+            //         nombre: formdata.nombre,
+            //         apellido: formdata.apellido,
+            //         edad: formdata.edad,
+            //         extranjeria: formdata.extranjeria,
+            //         numero_ci: formdata.ci,
+            //     },
+            // }).catch((err) => {
+            //     console.log('caimos aqui')
+            //     console.log(err)
+            // })
             console.log('something happened')
         }
     }

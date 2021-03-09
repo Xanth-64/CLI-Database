@@ -288,10 +288,12 @@ const resolvers = {
             models.gastos_extras.belongsTo(models.apartamento)
             models.edificio.hasMany(models.apartamento)
             models.apartamento.belongsTo(models.edificio)
-
+            const actualFecha = `${fecha.split('-')[0]}-${
+                fecha.split('-')[1]
+            }-01`
             return await models.gastos_extras.findAll({
                 where: {
-                    anio_mes: fecha,
+                    anio_mes: actualFecha,
                 },
                 include: {
                     model: models.apartamento,
@@ -318,10 +320,13 @@ const resolvers = {
             models.gastos_extras.belongsTo(models.apartamento)
             models.edificio.hasMany(models.apartamento)
             models.apartamento.belongsTo(models.edificio)
+            const actualFecha = `${fecha.split('-')[0]}-${
+                fecha.split('-')[1]
+            }-01`
             return await models.gastos_extras
                 .aggregate('monto', 'sum', {
                     where: {
-                        anio_mes: fecha,
+                        anio_mes: actualFecha,
                     },
                     include: {
                         model: models.apartamento,
@@ -347,6 +352,9 @@ const resolvers = {
             { nombre_conjunto, numero, n_piso, letra_apt, fecha },
             { models }
         ) {
+            const actualFecha = `${fecha.split('-')[0]}-${
+                fecha.split('-')[1]
+            }-01`
             return await models.sequelize.query(
                 'SELECT servicio.nombre, servicio.anio_mes, servicio.costo, servicio.costo * apartamento.alicuota/100 as "Monto_A_Pagar" FROM edificio INNER JOIN apartamento ON apartamento.edificioID = edificio.id INNER JOIN factura ON factura.apartamentoID = apartamento.id INNER JOIN incluyen ON factura.id = incluyen.facturaID INNER JOIN servicio ON incluyen.servicioID = servicio.id WHERE edificio.nombre_conjunto = ? AND edificio.numero = ? AND apartamento.n_piso = ? AND apartamento.letra_apt = ? AND  factura.fecha_emitida = ?',
                 {
@@ -355,7 +363,7 @@ const resolvers = {
                         numero,
                         n_piso,
                         letra_apt,
-                        fecha,
+                        actualFecha,
                     ],
                     type: QueryTypes.SELECT,
                 }
@@ -367,6 +375,9 @@ const resolvers = {
             { nombre_conjunto, numero, n_piso, letra_apt, fecha },
             { models }
         ) {
+            const actualFecha = `${fecha.split('-')[0]}-${
+                fecha.split('-')[1]
+            }-01`
             return await models.sequelize.query(
                 'SELECT SUM(servicio.costo) As "total_edificio", SUM(servicio.costo * apartamento.alicuota/100) as "total_apartamento",SUM(servicio.costo * apartamento.alicuota/100) - total_apartamento_pagado AS "total_faltante", total_apartamento_pagado FROM edificio INNER JOIN apartamento ON apartamento.edificioID = edificio.id INNER JOIN factura ON factura.apartamentoID = apartamento.id INNER JOIN incluyen ON factura.id = incluyen.facturaID INNER JOIN servicio ON incluyen.servicioID = servicio.id WHERE edificio.nombre_conjunto = ? AND edificio.numero = ? AND apartamento.n_piso = ? AND apartamento.letra_apt = ? AND  factura.fecha_emitida = ? GROUP BY total_apartamento_pagado ',
                 {
@@ -375,7 +386,7 @@ const resolvers = {
                         numero,
                         n_piso,
                         letra_apt,
-                        fecha,
+                        actualFecha,
                     ],
                     type: QueryTypes.SELECT,
                 }
@@ -518,7 +529,7 @@ const resolvers = {
 
         async createPersona(
             root,
-            { nombre, apellido, extranjeria, numero_ci, edad },
+            { nombre, apellido, extranjeria, numero_ci, fecha_nac },
             { models }
         ) {
             return await models.persona.create({
@@ -526,8 +537,330 @@ const resolvers = {
                 apellido,
                 extranjeria,
                 numero_ci,
-                edad,
+                fecha_nac,
             })
+        },
+
+        async createApartamento(
+            root,
+            {
+                nombre_conjunto,
+                numero,
+                extranjeria,
+                numero_ci,
+                alicuota,
+                letra_apt,
+                n_piso,
+                registro_inmobiliario,
+                superficie,
+            },
+            { models }
+        ) {
+            const edificio = await models.edificio.findOne({
+                where: {
+                    nombre_conjunto: nombre_conjunto,
+                    numero: numero,
+                },
+            })
+            const propietario = await models.persona.findOne({
+                where: {
+                    extranjeria: extranjeria,
+                    numero_ci: numero_ci,
+                },
+            })
+            console.log(edificio)
+            console.log(propietario)
+            if (edificio && propietario) {
+                const edificioID = edificio.dataValues.id
+                const personaID = propietario.dataValues.id
+                const dataToInsert = {
+                    alicuota,
+                    letra_apt,
+                    n_piso,
+                    registro_inmobiliario,
+                    superficie,
+                    edificioID,
+                    personaID,
+                }
+                return await models.apartamento
+                    .create(dataToInsert)
+                    .then(() => {
+                        return {
+                            payload:
+                                'Apartamento Creado Exitosamente. Información del Mismo:' +
+                                JSON.stringify(dataToInsert),
+                        }
+                    })
+                    .catch(() => {
+                        return {
+                            payload:
+                                'Error al insertar el apartamento. Informacion no Valida',
+                        }
+                    })
+            } else {
+                return {
+                    payload:
+                        'Edificio o Propietario No Encontrado. Intente nuevamente',
+                }
+            }
+        },
+
+        async createServicio(
+            root,
+            { nombre_conjunto, numero, anio_mes, costo, nombre },
+            { models }
+        ) {
+            models.edificio.hasMany(models.apartamento)
+            models.apartamento.belongsTo(models.edificio)
+            models.apartamento.hasMany(models.factura)
+            models.factura.belongsTo(models.apartamento)
+            //Estandarizamos la fecha
+            const actualFecha = `${anio_mes.split('-')[0]}-${
+                anio_mes.split('-')[1]
+            }-01`
+            //Verificamos que no hayan facturas para ese edificio emitidas para la misma fecha
+            const factura = await models.edificio.findOne({
+                where: {
+                    nombre_conjunto: nombre_conjunto,
+                    numero: numero,
+                },
+                include: {
+                    model: models.apartamento,
+                    include: {
+                        model: models.factura,
+                        where: {
+                            fecha_emitida: actualFecha,
+                        },
+                    },
+                },
+            })
+            if (factura) {
+                return {
+                    payload:
+                        'Ya Hay una Factura creada para el edificio para la fecha seleccionada',
+                }
+            } else {
+                const edificio = await models.edificio.findOne({
+                    where: {
+                        nombre_conjunto: nombre_conjunto,
+                        numero: numero,
+                    },
+                })
+
+                if (edificio) {
+                    const edificioID = edificio.dataValues.id
+                    const payload = {
+                        costo,
+                        nombre,
+                        edificioID,
+                        anio_mes: actualFecha,
+                    }
+
+                    return await models.servicio
+                        .create(payload)
+                        .then(() => {
+                            return {
+                                payload: `Servicio creado exitosamente: ${JSON.stringify(
+                                    payload
+                                )}`,
+                            }
+                        })
+                        .catch(() => {
+                            return {
+                                payload: 'Informacion Invalida de Servicio',
+                            }
+                        })
+                } else {
+                    return { payload: 'Edificio No Encontrado' }
+                }
+            }
+        },
+
+        async facturacionMasiva(
+            root,
+            { anio_mes, nombre_conjunto, numero },
+            { models }
+        ) {
+            models.edificio.hasMany(models.apartamento)
+            models.apartamento.belongsTo(models.edificio)
+            models.apartamento.hasMany(models.factura)
+            models.factura.belongsTo(models.apartamento)
+            const actualFecha = `${anio_mes.split('-')[0]}-${
+                anio_mes.split('-')[1]
+            }-01`
+            const edificio = await models.edificio.findOne({
+                where: {
+                    nombre_conjunto: nombre_conjunto,
+                    numero: numero,
+                },
+            })
+            if (edificio) {
+                //Verificamos que no hayan facturas para ese edificio emitidas para la misma fecha
+                const factura = await models.edificio.findOne({
+                    where: {
+                        nombre_conjunto: nombre_conjunto,
+                        numero: numero,
+                    },
+                    include: {
+                        model: models.apartamento,
+                        include: {
+                            model: models.factura,
+                            where: {
+                                fecha_emitida: actualFecha,
+                            },
+                        },
+                    },
+                })
+                if (factura) {
+                    return {
+                        payload:
+                            'Ya hay facturas emitidas para la fecha para el edificio elegido',
+                    }
+                } else {
+                    const apartamentos = await models.apartamento.findAll({
+                        where: {
+                            edificioID: edificio.dataValues.id,
+                        },
+                    })
+                    const servicios = await models.servicio.findAll({
+                        where: {
+                            edificioID: edificio.dataValues.id,
+                            anio_mes: actualFecha,
+                        },
+                    })
+                    if (apartamentos.length === 0) {
+                        return {
+                            payload:
+                                'No Existen apartamentos actualmente registrados dentro del Edificio',
+                        }
+                    } else if (servicios.length === 0) {
+                        return {
+                            payload:
+                                'No Existen servicios actualmente registrados para el Edificio',
+                        }
+                    } else {
+                        let facturasArr = []
+                        apartamentos.forEach((apartamento) => {
+                            facturasArr.push({
+                                estado: 'Sin Pagar',
+                                fecha_emitida: actualFecha,
+                                total_apartamento_pagado: 0,
+                                apartamentoID: apartamento.dataValues.id,
+                            })
+                        })
+
+                        await models.factura.bulkCreate(facturasArr)
+                        await apartamentos.forEach(async (apartamento) => {
+                            console.log(apartamento.dataValues.id)
+                            await models.factura
+                                .findOne({
+                                    where: {
+                                        apartamentoID:
+                                            apartamento.dataValues.id,
+                                        fecha_emitida: actualFecha,
+                                    },
+                                })
+                                .then(async (response) => {
+                                    let incluyenArr = []
+                                    servicios.forEach((servicio) => {
+                                        incluyenArr.push({
+                                            facturaID: response.dataValues.id,
+                                            servicioID: servicio.dataValues.id,
+                                        })
+                                    })
+                                    await models.incluyen.bulkCreate(
+                                        incluyenArr
+                                    )
+                                })
+                        })
+                        return {
+                            payload:
+                                'Facturacion Masiva Culminada exitosamente',
+                        }
+                    }
+                }
+            } else {
+                return {
+                    payload:
+                        'El Edificio para el cual intento realizar la Facturacion Masiva No Existe...',
+                }
+            }
+        },
+
+        async createSuceso(
+            root,
+            { descripcion, titulo, fecha, nombre_conjunto, numero },
+            { models }
+        ) {
+            const edificio = await models.edificio.findOne({
+                where: {
+                    nombre_conjunto: nombre_conjunto,
+                    numero: numero,
+                },
+            })
+            if (edificio) {
+                return await models.suceso
+                    .create({
+                        descripcion,
+                        titulo,
+                        fecha,
+                        edificioID: edificio.dataValues.id,
+                    })
+                    .then(() => {
+                        return { payload: 'Suceso Creado Exitosamente' }
+                    })
+                    .catch(() => {
+                        return {
+                            payload:
+                                'Fracaso al crear el suceso. Suceso ya creado Anteriormente',
+                        }
+                    })
+            } else {
+                return {
+                    payload: 'El Edificio Especificado no Existe Actualmente',
+                }
+            }
+        },
+
+        async createRegistro(
+            root,
+            {
+                nombre_visitante,
+                ci_visitante,
+                fecha_hora,
+                nombre_conjunto,
+                numero,
+            },
+            { models }
+        ) {
+            const edificio = await models.edificio.findOne({
+                where: {
+                    nombre_conjunto: nombre_conjunto,
+                    numero: numero,
+                },
+            })
+            if (edificio) {
+                return await models.registro
+                    .create({
+                        nombre_visitante,
+                        ci_visitante,
+                        fecha_hora,
+                        edificioID: edificio.dataValues.id,
+                    })
+                    .then(() => {
+                        return { payload: 'Registro Creado Exitosamente' }
+                    })
+                    .catch(() => {
+                        return {
+                            payload:
+                                'Fracaso al crear el Registro. Registro ya creado Anteriormente',
+                        }
+                    })
+            } else {
+                return {
+                    payload: 'El Edificio Especificado no Existe Actualmente',
+                }
+            }
         },
 
         async createAreaComun(root, { tipo, numero }, { models }) {
@@ -598,7 +931,6 @@ const resolvers = {
         },
 
         //DELETE
-        //TODO: Hacer los Deletes "Paranoid-Friendly"
 
         async deleteAreaComun(root, { tipo, numero }, { models }) {
             models.areacomun.destroy({

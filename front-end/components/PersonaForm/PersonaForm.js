@@ -1,6 +1,31 @@
 import { useForm } from 'react-hook-form'
-
+import { useMutation, gql } from '@apollo/client'
+import { concatPagination } from '@apollo/client/utilities'
+const CREATE_PERSONA_MUTATION = gql`
+    mutation createPersona(
+        $nombre: String!
+        $apellido: String!
+        $extranjeria: String!
+        $numero_ci: Int!
+        $edad: Int!
+    ) {
+        createPersona(
+            nombre: $nombre
+            apellido: $apellido
+            extranjeria: $extranjeria
+            numero_ci: $numero_ci
+            edad: $edad
+        ) {
+            nombre
+            apellido
+            extranjeria
+            numero_ci
+            edad
+        }
+    }
+`
 const PersonaForm = () => {
+    const [createPersona, { loading }] = useMutation(CREATE_PERSONA_MUTATION)
     const { register, handleSubmit } = useForm()
     const onSubmit = (data) => {
         if (
@@ -31,7 +56,18 @@ const PersonaForm = () => {
                 ci: parseInt(data.numero_ci),
             }
             console.log(formdata)
-            //CREATEPERSONA(data)
+            await createPersona({
+                variables: {
+                    nombre: formdata.nombre,
+                    apellido: formdata.apellido,
+                    edad: formdata.edad,
+                    extranjeria: formdata.extranjeria,
+                    numero_ci: formdata.ci,
+                },
+            }).catch((err) => {
+                console.log('caimos aqui')
+                console.log(err)
+            })
         }
     }
 

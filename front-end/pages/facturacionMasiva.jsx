@@ -1,10 +1,34 @@
 import { useForm } from 'react-hook-form'
-const facturacionMaxiva = () => {
+import { useMutation, gql } from '@apollo/client'
+const facturacion = () => {
+    const facturacionMasiva = gql`
+        mutation facturacionMasiva(
+            $anio_mes: LocalDate!
+            $nombre_conjunto: String!
+            $numero: Int!
+        ) {
+            facturacionMasiva(
+                anio_mes: $anio_mes
+                nombre_conjunto: $nombre_conjunto
+                numero: $numero
+            ) {
+                payload
+            }
+        }
+    `
     const { register, handleSubmit } = useForm()
+    const [makeFacturacion, { loading, error, data }] = useMutation(
+        facturacionMasiva
+    )
     const estado = 'desocupado'
     const onSubmit = (data) => {
-        console.log(data)
-        //PONER EL QUERY AQUI
+        makeFacturacion({
+            variables: {
+                anio_mes: data.anio_mes,
+                numero: parseInt(data.numero),
+                nombre_conjunto: data.nombre_conjunto,
+            },
+        })
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -19,7 +43,7 @@ const facturacionMaxiva = () => {
             </div>
             <div>
                 <label for="numero"> Numero de la torre </label>
-                <input ref={register} name="numero" type="text" id="numero" />
+                <input ref={register} name="numero" type="number" id="numero" />
             </div>
             <div>
                 <label for="anio_mes"> Fecha </label>
@@ -31,7 +55,12 @@ const facturacionMaxiva = () => {
                 />
             </div>
             <button type="submit"> REALIZAR FACTURACION MASIVA </button>
+            {data == undefined ? (
+                <div>Realice la facturación de su Edificio</div>
+            ) : (
+                <div>{data.facturacionMasiva.payload}</div>
+            )}
         </form>
     )
 }
-export default facturacionMaxiva
+export default facturacion

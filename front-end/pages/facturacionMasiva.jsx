@@ -33,7 +33,7 @@ const facturacion = () => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-                <label for="nombre_conjunto"> Nombre del Conjunto </label>
+                <label htmlFor="nombre_conjunto"> Nombre del Conjunto </label>
                 <input
                     ref={register}
                     name="nombre_conjunto"
@@ -42,11 +42,11 @@ const facturacion = () => {
                 />
             </div>
             <div>
-                <label for="numero"> Numero de la torre </label>
+                <label htmlFor="numero"> Numero de la torre </label>
                 <input ref={register} name="numero" type="number" id="numero" />
             </div>
             <div>
-                <label for="anio_mes"> Fecha </label>
+                <label htmlFor="anio_mes"> Fecha </label>
                 <input
                     ref={register}
                     name="anio_mes"

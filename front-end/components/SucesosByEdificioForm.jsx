@@ -15,6 +15,7 @@ export const SucesosByEdificioForm = () => {
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
+            <h3>BUSCAR SUCESOS POR EDIFICIO</h3>
             <div>
                 <label for="tipo"> Nombre del Conjunto </label>
                 <input ref={register} name="tipo" type="text" id="tipo" />

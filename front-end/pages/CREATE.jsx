@@ -1,5 +1,6 @@
 import PersonaForm from '../components/PersonaForm/PersonaForm'
 import FacturaForm from '../components/FacturaForm'
+import BuscarSucesosMixtoForm from '../components/BuscarSucesosMixtoForm'
 function createCRUD() {
     return (
         <div>
@@ -10,7 +11,9 @@ function createCRUD() {
             <article>
                 <FacturaForm />
             </article>
-            <article></article>
+            <article>
+                <BuscarSucesosMixtoForm />
+            </article>
         </div>
     )
 }

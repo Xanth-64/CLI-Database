@@ -56,18 +56,18 @@ const PersonaForm = () => {
                 ci: parseInt(data.numero_ci),
             }
             console.log(formdata)
-            await createPersona({
-                variables: {
-                    nombre: formdata.nombre,
-                    apellido: formdata.apellido,
-                    edad: formdata.edad,
-                    extranjeria: formdata.extranjeria,
-                    numero_ci: formdata.ci,
-                },
-            }).catch((err) => {
-                console.log('caimos aqui')
-                console.log(err)
-            })
+            // await createPersona({
+            //     variables: {
+            //         nombre: formdata.nombre,
+            //         apellido: formdata.apellido,
+            //         edad: formdata.edad,
+            //         extranjeria: formdata.extranjeria,
+            //         numero_ci: formdata.ci,
+            //     },
+            // }).catch((err) => {
+            //     console.log('caimos aqui')
+            //     console.log(err)
+            // })
         }
     }
 

@@ -25,6 +25,7 @@ const CREATE_PERSONA_MUTATION = gql`
     }
 `
 const PersonaForm = () => {
+    const [createPersona, { loading }] = useMutation(CREATE_PERSONA_MUTATION)
     const { register, handleSubmit } = useForm()
     const onSubmit = (data) => {
         if (

@@ -97,6 +97,7 @@ li {
 .logo {
     font-size: 2rem;
     font-weight: bolder;
+    background-color: darkcyan;
     color: white;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
         'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
@@ -105,7 +106,7 @@ li {
 .navBar {
     display: flex;
     justify-content: space-around;
-    background-color: dimgray;
+    background-color: teal;
 }
 .navBar-item {
     color: white;
@@ -116,5 +117,5 @@ li {
 }
 .navBar-item:hover {
     text-decoration: underline;
-    background-color: teal;
+    background-color: darkcyan;
 }

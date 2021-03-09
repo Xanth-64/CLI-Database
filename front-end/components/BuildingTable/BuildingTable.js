@@ -1,4 +1,3 @@
-import React from 'react';
 import BuildingRow from './BuildingRow';
 
 const BuildingTable = ({buildings}) => {
@@ -6,7 +5,6 @@ const BuildingTable = ({buildings}) => {
         return (
             <li key={item.id}>
                 <BuildingRow
-                    id={item.id}
                     name={item.nombre_conjunto}
                     number={item.numero}
                 />
@@ -18,7 +16,6 @@ const BuildingTable = ({buildings}) => {
             <h1>Edificio</h1>
             <div className='t-dark'>
                 <BuildingRow
-                    id='ID'
                     name='Nombre'
                     number='Número'
                 />

@@ -1,61 +1,55 @@
-import { Form, FormGroup, FormControl, ControlLabel, HelpBlock, ButtonToolbar } from 'rsuite';
-import { useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form'
 
 const FacturaForm = () => {
-    const {register, handleSubmit} = useForm();
+    const { register, handleSubmit } = useForm()
 
     const onSubmit = (data) => {
-        console.log(data); //CAMBIAR
+        console.log(data) //CAMBIAR
     }
 
-    return(
+    return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <h3>Información del edificio</h3>
 
-            <label for='nombre_edificio'>Nombre del edificio:</label>
+            <label for="nombre_edificio">Nombre del edificio:</label>
             <input
                 ref={register}
-                name='nombre_edificio'
-                type='text'
-                id='nombre_edificio'
+                name="nombre_edificio"
+                type="text"
+                id="nombre_edificio"
             />
 
-            <label for='numero_edificio'>Número del edificio:</label>
+            <label for="numero_edificio">Número del edificio:</label>
             <input
                 ref={register}
-                name='numero_edificio'
-                type='number'
-                id='numero_edificio'
+                name="numero_edificio"
+                type="number"
+                id="numero_edificio"
             />
 
             <h3>Información del apartamento</h3>
 
-            <label for='nombre_apto'>Nombre del apartamento:</label>
+            <label for="nombre_apto">Nombre del apartamento:</label>
             <input
                 ref={register}
-                name='nombre_apto'
-                type='text'
-                id='nombre_apto'
+                name="nombre_apto"
+                type="text"
+                id="nombre_apto"
             />
 
-            <label for='numero_apto'>Número del apartamento:</label>
+            <label for="numero_apto">Número del apartamento:</label>
             <input
                 ref={register}
-                name='numero_apto'
-                type='number'
-                id='numero_apto'
+                name="numero_apto"
+                type="number"
+                id="numero_apto"
             />
 
             <h3>Fecha de la factura</h3>
 
-            <input
-                ref={register}
-                name='fecha'
-                type='date'
-                id='fecha'
-            />
+            <input ref={register} name="fecha" type="date" id="fecha" />
 
-            <input type='submit' value='Aceptar' className='form-button'/>
+            <input type="submit" value="Aceptar" className="form-button" />
         </form>
     )
     /* return(
@@ -91,4 +85,4 @@ const FacturaForm = () => {
     ) */
 }
 
-export default FacturaForm;
+export default FacturaForm

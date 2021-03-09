@@ -90,3 +90,32 @@ li {
     font-size: 14px;
     width: 100vw;
 }
+.navBar-wrapper {
+    display: block;
+    background-color: dimgray;
+}
+.logo {
+    font-size: 2rem;
+    font-weight: bolder;
+    background-color: darkcyan;
+    color: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    padding: 1%;
+}
+.navBar {
+    display: flex;
+    justify-content: space-around;
+    background-color: teal;
+}
+.navBar-item {
+    color: white;
+    padding: 1% 0;
+    font-weight: bolder;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.navBar-item:hover {
+    text-decoration: underline;
+    background-color: darkcyan;
+}

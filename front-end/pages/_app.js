@@ -1,5 +1,5 @@
-import '../styles/globals.css'
-import '../styles/formStyles.css'
+import '../styles/globals.less'
+import '../styles/formStyles.less'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 function MyApp({ Component, pageProps }) {
     const client = new ApolloClient({

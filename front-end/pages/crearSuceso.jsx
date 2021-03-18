@@ -1,39 +1,65 @@
 import { useForm } from 'react-hook-form'
+import { useMutation, gql } from '@apollo/client'
 const crearSuceso = () => {
+    const createSuceso = gql`
+        mutation createSuceso(
+            $descripcion: String!
+            $titulo: String!
+            $fecha: LocalDate!
+            $nombre_conjunto: String!
+            $numero: Int!
+        ) {
+            createSuceso(
+                descripcion: $descripcion
+                titulo: $titulo
+                fecha: $fecha
+                nombre_conjunto: $nombre_conjunto
+                numero: $numero
+            ) {
+                payload
+            }
+        }
+    `
+
+    const [createSucesoFunc, { loading, error, data }] = useMutation(
+        createSuceso
+    )
+
     const { register, handleSubmit } = useForm()
     //ESTADO POR DEFECTO
     const estado = 'desocupado'
     const onSubmit = (data) => {
-        if (data.numero.isInteger()) {
-            // COMPROBAR QUE EL CONJUNTO EXISTE
-            if (true) {
-                data.estado = estado
-                console.log(data)
-                //PONER EL QUERY AQUI
-            }
-        }
+        createSucesoFunc({
+            variables: {
+                descripcion: data.descripcion,
+                titulo: data.titulo,
+                fecha: data.anio_mes,
+                nombre_conjunto: data.nombre_conjunto,
+                numero: parseInt(data.numero),
+            },
+        })
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-                <label for="nombre_conjunto"> Nombre del conjunto </label>
+                <label for="nombre_conjunto"> Nombre del Edificio </label>
                 <input
                     ref={register}
                     name="nombre_conjunto"
                     type="text"
-                    id="titnombre_conjunto"
+                    id="nombre_conjunto"
                 />
             </div>
             <div>
-                <label for="numero"> numero de Torre </label>
+                <label htmlFor="numero"> Numero de Torre </label>
                 <input ref={register} name="numero" type="number" id="numero" />
             </div>
             <div>
-                <label for="titulo"> titulo </label>
+                <label htmlFor="titulo"> Titulo Suceso </label>
                 <input ref={register} name="titulo" type="text" id="titulo" />
             </div>
             <div>
-                <label for="descripcion"> Descripcion </label>
+                <label htmlFor="descripcion"> Descripcion </label>
                 <input
                     ref={register}
                     name="descripcion"
@@ -42,16 +68,19 @@ const crearSuceso = () => {
                 />
             </div>
             <div>
-                <label for="estado"> Estado </label>
+                <label htmlFor="anio_mes"> Fecha del Suceso </label>
                 <input
                     ref={register}
-                    name="estado"
-                    type="text"
-                    id="estado"
-                    placeholder="michigan"
-                    disabled={true}
+                    name="anio_mes"
+                    type="date"
+                    id="anio_mes"
                 />
             </div>
+            {data == undefined ? (
+                <div>Introduzca el Suceso a Registrar</div>
+            ) : (
+                <div>{data.createSuceso.payload}</div>
+            )}
             <button type="submit"> REGISTRAR SUCESO</button>
         </form>
     )

@@ -1,31 +1,58 @@
 import { isInteger } from 'lodash'
-import { useState } from 'react'
+import { useLazyQuery, gql } from '@apollo/client'
 import { useForm } from 'react-hook-form'
-
+import SucesosInformation from '../components/SucesosInformation'
 const BuscarSucesosMixtoForm = () => {
     const { register, handleSubmit } = useForm()
-    const [datos, useDatos] = useState()
-    const onSubmit = (data) => {
-        console.log(data)
-        if (data.numero.isNumeric && isInteger(parseInt(data.numero))) {
-            //BUSCAR SI EXISTE UN CONDO CON EL NOMBRE DE data.nombre_conjunto y data.numero
-            if (true) {
-                //EN CASO DE EXISTIR, REAZLIZAR LA BUSQUEDA
-                //LUEGO DE LA FUNCION, DENTRO DEL .THEN() ESCRIBIR LO SIGUIENTE
-                //setDatos(datos) //HABILITA LA TABLA
+    const GetSucesos = gql`
+        query getSucesoByDateRangeAndEdificioIdentifie(
+            $LowerBound: LocalDate!
+            $UpperBound: LocalDate!
+            $nombre_conjunto: String!
+            $numero: Int!
+        ) {
+            getSucesoByDateRangeAndEdificioIdentifier(
+                LowerBound: $LowerBound
+                UpperBound: $UpperBound
+                nombre_conjunto: $nombre_conjunto
+                numero: $numero
+            ) {
+                descripcion
+                titulo
+                fecha
             }
         }
+    `
+    const [getSucesos, { loading, error, data }] = useLazyQuery(GetSucesos)
+    const onSubmit = (datos) => {
+        console.log(datos)
+        getSucesos({
+            variables: {
+                LowerBound: datos.lowerBound,
+                UpperBound: datos.upperBound,
+                nombre_conjunto: datos.nombre_conjunto,
+                numero: parseInt(datos.numero),
+            },
+        })
     }
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <h3>BUSCAR SUCESOS POR EDIFICIO Y RANGO DE FECHA</h3>
                 <div>
-                    <label for="tipo"> Nombre del Conjunto </label>
-                    <input ref={register} name="tipo" type="text" id="tipo" />
+                    <label htmlFor="nombre_conjunto">
+                        {' '}
+                        Nombre del Conjunto{' '}
+                    </label>
+                    <input
+                        ref={register}
+                        name="nombre_conjunto"
+                        type="text"
+                        id="nombre_conjunto"
+                    />
                 </div>
                 <div>
-                    <label for="numero"> Numero de Torre </label>
+                    <label htmlFor="numero"> Numero de Torre </label>
                     <input
                         ref={register}
                         name="numero"
@@ -33,14 +60,14 @@ const BuscarSucesosMixtoForm = () => {
                         id="numero"
                     />
                 </div>
-                <label for="lowerBound"> Fecha de inicio</label>
+                <label htmlFor="lowerBound"> Fecha de inicio</label>
                 <input
                     ref={register}
-                    name="LowerBound"
+                    name="lowerBound"
                     type="date"
                     id="lowerBound"
                 />
-                <label for="upperBound"> Fecha Final </label>
+                <label htmlFor="upperBound"> Fecha Final </label>
                 <input
                     ref={register}
                     name="upperBound"
@@ -49,10 +76,7 @@ const BuscarSucesosMixtoForm = () => {
                 />
                 <button type="submit"> Buscar Sucesos</button>
             </form>
-            {datos &&
-                datos.map((dato) => {
-                    ;<h1></h1>
-                })}
+            <SucesosInformation Information={data}></SucesosInformation>
         </div>
     )
 }

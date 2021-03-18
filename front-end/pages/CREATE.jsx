@@ -10,9 +10,7 @@ function createCRUD() {
             <article>
                 <FacturaForm />
             </article>
-            <article>
-                <BuscarSucesosMixtoForm />
-            </article>
+            <article></article>
         </div>
     )
 }

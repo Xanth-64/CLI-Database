@@ -1,6 +1,6 @@
-import PersonRow from './PersonRow';
+import PersonRow from './PersonRow'
 
-const PersonTable = ({persons}) => {
+const PersonTable = ({ persons }) => {
     const items = persons.map((item) => {
         return (
             <li key={item.id}>
@@ -9,31 +9,31 @@ const PersonTable = ({persons}) => {
                     lastName={item.apellido}
                     foreigner={item.extranjeria}
                     numberID={item.numero_ci}
-                    age={item.edad}
+                    age={item.fecha_nac}
                 />
-                <button type='button' className='t-btn danger'>Eliminar</button>
+                <button type="button" className="t-btn danger">
+                    Eliminar
+                </button>
             </li>
         )
     })
     return (
-        <div className='t-container'>
+        <div className="t-container">
             <h1>Persona</h1>
-            <div className='t-dark'>
+            <div className="t-dark">
                 <PersonRow
-                    firstName='Nombre'
-                    lastName='Apellido'
-                    foreigner='Extranjería'
-                    numberID='Nro. de Cédula'
-                    age='Edad'
+                    firstName="Nombre"
+                    lastName="Apellido"
+                    foreigner="Extranjería"
+                    numberID="Nro. de Cédula"
+                    age="Fecha Nacimiento"
                 />
             </div>
-            <div className='t-list'>
-                <ul>
-                    {items}
-                </ul>
+            <div className="t-list">
+                <ul>{items}</ul>
             </div>
         </div>
     )
 }
 
-export default PersonTable;
+export default PersonTable

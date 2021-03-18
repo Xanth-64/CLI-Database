@@ -1,44 +1,32 @@
 import PersonTable from '../components/PersonTable/PersonTable'
 import BuildingTable from '../components/BuildingTable/BuildingTable'
 import SpaceTable from '../components/SpaceTable/SpaceTable'
-// import { useQuery, gql } from '@apollo/client'
-// const GET_PEOPLE = gql`
-//     query getPersonas {
-//         getPersonas {
-//             id
-//             nombre
-//             apellido
-//             extranjeria
-//             numero_ci
-//             edad
-//         }
+import { useQuery, gql } from '@apollo/client'
+const GET_PEOPLE = gql`
+    query getPersonas {
+        getPersonas {
+            nombre
+            apellido
+            extranjeria
+            numero_ci
+            fecha_nac
+        }
 
-//         getEdificios {
-//             id
-//             nombre_conjunto
-//             numero
-//         }
+        getEdificios {
+            nombre_conjunto
+            numero
+        }
 
-//         getAreas {
-//             id
-//             estado
-//             tipo
-//             numero
-//             personaID
-//             momento
-//         }
-//     }
-// `
+        getAreas {
+            estado
+            tipo
+            numero
+        }
+    }
+`
 
 function readCRUD(props) {
-    //const { loading, error, data } = useQuery(GET_PEOPLE)
-    const data = {
-        getPersonas: [],
-        getEdificios: [],
-        getAreas: [],
-    }
-    const loading = false
-    const error = false
+    const { loading, error, data } = useQuery(GET_PEOPLE)
     console.log(data)
     if (loading) {
         return <h1>Loading</h1>

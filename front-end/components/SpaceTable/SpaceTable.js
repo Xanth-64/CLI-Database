@@ -1,6 +1,6 @@
-import SpaceRow from './SpaceRow';
+import SpaceRow from './SpaceRow'
 
-const SpaceTable = ({spaces}) => {
+const SpaceTable = ({ spaces }) => {
     const items = spaces.map((item) => {
         return (
             <li key={item.id}>
@@ -9,30 +9,24 @@ const SpaceTable = ({spaces}) => {
                     type={item.tipo}
                     number={item.numero}
                     personID={item.personaID}
-                    moment={item.momento}
                 />
-                <button type='button' className='t-btn danger'>Eliminar</button>
+                <button type="button" className="t-btn danger">
+                    Eliminar
+                </button>
             </li>
         )
     })
     return (
-        <div className='t-container'>
+        <div className="t-container">
             <h1>Área común</h1>
-            <div className='t-dark'>
-                <SpaceRow
-                    state='Estado'
-                    type='Tipo'
-                    number='Número'
-                    moment='Momento'
-                />
+            <div className="t-dark">
+                <SpaceRow state="Estado" type="Tipo" number="Número" />
             </div>
-            <div className='t-list'>
-                <ul>
-                    {items}
-                </ul>
+            <div className="t-list">
+                <ul>{items}</ul>
             </div>
         </div>
     )
 }
 
-export default SpaceTable;
+export default SpaceTable

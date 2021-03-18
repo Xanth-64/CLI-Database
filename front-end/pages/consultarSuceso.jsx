@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { useLazyQuery, gql } from '@apollo/client'
 import SucesosInformation from '../components/SucesosInformation'
+import BuscarSucesosMixtoForm from '../components/BuscarSucesosMixtoForm'
 function paginaConsultaSuceso() {
     const { register, handleSubmit } = useForm()
     const GetSucesos = gql`
@@ -58,7 +59,9 @@ function paginaConsultaSuceso() {
                 <SucesosInformation Information={data}></SucesosInformation>
             </section>
 
-            <section></section>
+            <section>
+                <BuscarSucesosMixtoForm />
+            </section>
         </div>
     )
 }
